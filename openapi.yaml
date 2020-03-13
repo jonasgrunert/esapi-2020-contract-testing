@@ -1,0 +1,220 @@
+openapi: 3.0.2
+info:
+  title: Collabify API
+  description: Collaborate with your friends on a Spotify Playlist
+  version: 0.1.0
+
+servers:
+  - url: https://collabify.azurewebsites.net/
+    description: Stable API
+  - url: https://collabify{commit-hash}.azurewebsites.net/
+    description: API Preview gotten from a pull request
+    variables:
+      commit-hash:
+        description: The Commit ID assigned to the pull request
+        default: ""
+
+tags:
+  - name: playlist
+    description: Information about playlists
+  - name: track
+    description: Operations on a single track object
+
+paths:
+  /playlists:
+    get:
+      summary: Returns a list of shared playlists
+      description: Gets all shared playlists the user can edit and applies a certain format
+      tags:
+        - playlist
+      responses:
+        "200":
+          description: A JSON array of all playlists
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/playlistInfo"
+        "400":
+          $ref: "#/components/responses/400BadRequest"
+        "401":
+          $ref: "#/components/responses/401Unauthorized"
+        "403":
+          $ref: "#/components/responses/403Forbidden"
+  /playlists/{playlistId}:
+    parameters:
+      - $ref: "#/components/parameters/playlistId"
+    get:
+      summary: Returns all details of a specific playlist
+      description: Returns the details of a specific playlist, including track details
+      tags:
+        - playlist
+      responses:
+        "200":
+          description: A JSON Object with an info key and a track key, which is an array of tracks
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/playlistDetail"
+        "400":
+          $ref: "#/components/responses/400BadRequest"
+        "401":
+          $ref: "#/components/responses/401Unauthorized"
+        "403":
+          $ref: "#/components/responses/403Forbidden"
+  /playlists/{playlistId}/{trackId}:
+    parameters:
+      - $ref: "#/components/parameters/playlistId"
+      - $ref: "#/components/parameters/trackId"
+    put:
+      summary: Like a specific song in a specific playlist
+      description: Likes a specific song for the loggedin user, if it was not liked before
+      tags:
+        - track
+      responses:
+        "200":
+          description: A JSON Object with a vote property indicating the vote, and a summary with the current vote
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/trackDetail"
+        "400":
+          $ref: "#/components/responses/400BadRequest"
+        "401":
+          $ref: "#/components/responses/401Unauthorized"
+        "403":
+          $ref: "#/components/responses/403Forbidden"
+    delete:
+      summary: Dislikes a specific song in a specific playlist
+      description: Dislikes a specific song for the loggedin user, if it was not disliked before
+      tags:
+        - track
+      responses:
+        "200":
+          description: A JSON Object with a vote property indicating the vote, and a summary with the current vote
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/trackDetail"
+        "400":
+          $ref: "#/components/responses/400BadRequest"
+        "401":
+          $ref: "#/components/responses/401Unauthorized"
+        "403":
+          $ref: "#/components/responses/403Forbidden"
+components:
+  schemas:
+    playlistInfo:
+      required:
+        - id
+        - name
+      type: object
+      readOnly: true
+      properties:
+        id:
+          type: string
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        user:
+          type: string
+          readOnly: true
+    playlistDetail:
+      required:
+        - tracks
+      type: object
+      readOnly: true
+      properties:
+        info:
+          type: object
+          $ref: "#/components/schemas/playlistInfo"
+        tracks:
+          type: array
+          items:
+            $ref: "#/components/schemas/track"
+    track:
+      required:
+        - id
+        - name
+      type: object
+      readOnly: true
+      properties:
+        id:
+          type: string
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+        artist:
+          type: string
+          readOnly: true
+    trackDetail:
+      required:
+        - vote
+      type: object
+      readOnly: true
+      properties:
+        vote:
+          type: string
+          enum: ["Like", "Dislike", "Not"]
+          readOnly: true
+        summary:
+          type: object
+          readOnly: true
+          properties:
+            amount:
+              type: number
+              readOnly: true
+            positive:
+              type: number
+              readOnly: true
+            negative:
+              type: number
+              readOnly: true
+  parameters:
+    playlistId:
+      name: playlistId
+      schema:
+        type: string
+      in: path
+      required: true
+    trackId:
+      name: trackid
+      schema:
+        type: string
+      in: path
+      required: true
+  responses:
+    400BadRequest:
+      description: Default answer on a malformatted request
+      content:
+        application/json:
+          schema:
+            type: string
+    401Unauthorized:
+      description: Default answer, when the access to the Spotiy API is not allowed
+      content:
+        application/json:
+          schema:
+            type: string
+    403Forbidden:
+      description: Default answer, when the access to a certain resource of the Spotify API is not allowed
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - missingPermission
+            properties:
+              missingPermission:
+                type: string
+                readOnly: true
+              message:
+                type: string
+                readOnly: true
+    404NotFound:
+      content:
+        application/json:
+          schema:
+            type: string
+      description: Could not find the given resource

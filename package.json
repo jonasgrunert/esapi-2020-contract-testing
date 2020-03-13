@@ -1,0 +1,48 @@
+{
+  "name": "example",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "prestart": "npm run build",
+    "start": "func start",
+    "test": "swagger-cli validate openapi.yaml  && jest"
+  },
+  "dependencies": {
+    "@azure/cosmos": "^3.6.2",
+    "axios": "^0.19.2"
+  },
+  "devDependencies": {
+    "@azure/functions": "^1.0.2-beta2",
+    "@pact-foundation/pact": "^9.8.0",
+    "@types/jest": "^25.1.4",
+    "@types/node": "^13.9.0",
+    "@typescript-eslint/eslint-plugin": "^2.23.0",
+    "@typescript-eslint/parser": "^2.23.0",
+    "eslint": "^6.8.0",
+    "eslint-plugin-react": "^7.19.0",
+    "husky": "^4.2.3",
+    "jest": "^25.1.0",
+    "jest-pact": "^0.5.2",
+    "pact": "^4.3.2",
+    "prettier": "^1.19.1",
+    "standard-version": "^7.1.0",
+    "swagger-cli": "^3.0.1",
+    "swagger-mock-validator": "^9.0.0",
+    "ts-jest": "^25.2.1",
+    "typescript": "^3.3.3"
+  },
+  "jest": {
+    "roots": [
+      "<rootDir>"
+    ],
+    "testMatch": [
+      "**/__tests__/**/*ts",
+      "**/?(*.)+(spec|test)ts"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "ts-jest"
+    }
+  }
+}
