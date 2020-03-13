@@ -1,4 +1,4 @@
-openapi: 3.0.2
+openapi: 3.0.1
 info:
   title: Collabify API
   description: Collaborate with your friends on a Spotify Playlist
@@ -33,7 +33,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/playlistInfo"
+                type: array
+                items:
+                  $ref: "#/components/schemas/playlistInfo"
         "400":
           $ref: "#/components/responses/400BadRequest"
         "401":

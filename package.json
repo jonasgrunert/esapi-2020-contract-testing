@@ -7,7 +7,7 @@
     "watch": "tsc -w",
     "prestart": "npm run build",
     "start": "func start",
-    "test": "swagger-cli validate openapi.yaml  && jest"
+    "test": "swagger-cli validate openapi.yaml && swagger-mock-validator openapi.yaml pact/pacts/collabify_web_app-collabify_api.json && jest"
   },
   "dependencies": {
     "@azure/cosmos": "^3.6.2",
@@ -31,7 +31,8 @@
     "swagger-cli": "^3.0.1",
     "swagger-mock-validator": "^9.0.0",
     "ts-jest": "^25.2.1",
-    "typescript": "^3.3.3"
+    "typescript": "^3.3.3",
+    "unmock": "^0.3.16"
   },
   "jest": {
     "roots": [
@@ -43,6 +44,7 @@
     ],
     "transform": {
       "^.+\\.(ts|tsx)$": "ts-jest"
-    }
+    },
+    "testEnvironment": "node"
   }
 }

@@ -24,7 +24,7 @@ export async function httpTrigger(
   const { playlistId } = parseParameters(context, ["playlistId"]);
   const client = await getApiClient(req);
   if (playlistId) {
-    const res = await client.get(`playlists/${playlistId}`);
+    const res = await client.get(`/playlists/${playlistId}`);
     if (res.status !== 200) {
       throw { status: 404 };
     }
@@ -43,7 +43,7 @@ export async function httpTrigger(
       }
     };
   }
-  const res = await client.get("me/playlists");
+  const res = await client.get("/me/playlists");
   if (res.status !== 200) {
     throw { status: 404 };
   }

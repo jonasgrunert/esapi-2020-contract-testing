@@ -18,7 +18,7 @@ export function parseParameters(
   );
 }
 
-export async function getApiToken(req: HttpRequest): Promise<ttring> {
+export async function getApiToken(req: HttpRequest): Promise<string> {
   if (req.headers.Authorization === undefined)
     throw { status: 401, message: "No API token provided." };
   const token = await Axios.post("https://accounts.spotify.com/api/token", {

@@ -1,10 +1,12 @@
 import { eachLike } from "pact/src/dsl/matchers";
 import { pactWith } from "jest-pact";
+import Axios from "axios";
 
 pactWith(
   {
     consumer: "Collabify Web App",
-    provider: "Collabify API"
+    provider: "Collabify API",
+    port: 1234
   },
   provider => {
     describe("Getting all playlists from the API", () => {
@@ -29,9 +31,13 @@ pactWith(
           }
         })
       );
-    });
-    it("Get all playlists", () => {
-      expect(1).toBe(1);
+      it("Get all playlists frontend test", async () => {
+        expect(
+          await Axios.get("http://localhost:1234/playlists").then(c =>
+            Array.isArray(c.data)
+          )
+        ).toBeTruthy();
+      });
     });
   }
 );
