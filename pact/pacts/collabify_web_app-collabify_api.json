@@ -1,0 +1,44 @@
+{
+  "consumer": {
+    "name": "Collabify Web App"
+  },
+  "provider": {
+    "name": "Collabify API"
+  },
+  "interactions": [
+    {
+      "description": "a request to display playlists",
+      "providerState": "There are playlists",
+      "request": {
+        "method": "GET",
+        "path": "/playlists"
+      },
+      "response": {
+        "status": 200,
+        "headers": {
+          "Content-Type": "application/json"
+        },
+        "body": [
+          {
+            "id": "uuid-2se",
+            "name": "Example Track",
+            "user": "M. Mustermensch"
+          }
+        ],
+        "matchingRules": {
+          "$.body": {
+            "min": 1
+          },
+          "$.body[*].*": {
+            "match": "type"
+          }
+        }
+      }
+    }
+  ],
+  "metadata": {
+    "pactSpecification": {
+      "version": "2.0.0"
+    }
+  }
+}
